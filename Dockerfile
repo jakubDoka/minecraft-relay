@@ -2,13 +2,12 @@ FROM ubuntu:latest
 
 RUN apt update && apt install  openssh-server sudo -y
 
-RUN useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1000 test 
+RUN useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1000 user
 
-RUN  echo "user:$PASSWORD" | chpasswd
+RUN echo ' \n\
+echo user:$PASSWORD | chpasswd \n\
+service ssh start -p$PORT \n\
+/usr/sbin/sshd -D \n\
+' > boot.sh
 
-RUN service ssh start
-
-EXPOSE 22
-
-CMD ["/usr/sbin/sshd","-D"]
-
+CMD ["sh", "boot.sh"]
